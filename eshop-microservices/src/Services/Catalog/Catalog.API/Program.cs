@@ -1,10 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the container
-builder.Services.AddCarter(null,congif =>
-{
-    congif.
-});
+builder.Services.AddCarter();
 
 //register mediatr services and register services from all assemblies and where to find the command and qeuery handler classes
 //since mediastr is located in building blocks this now knows that it needs to regsiter and serach in this project
@@ -16,7 +13,6 @@ builder.Services.AddMediatR(config =>
 var app = builder.Build();
 
 //configure the hhtp request pipeline
-
-app.MapGet("/", () => "Hello World!");
+app.MapCarter();
 
 app.Run();

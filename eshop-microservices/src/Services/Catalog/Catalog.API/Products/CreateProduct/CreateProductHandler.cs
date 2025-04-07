@@ -19,7 +19,7 @@ namespace Catalog.API.Products.CreateProduct
 
     // Result Record: Represents what will be returned after creating the product
     // In this case, we only return the newly created product's unique identifier
-    public record CreateProductResult(Guid id);
+    public record CreateProductResult(Guid Id);
 
     // Command Handler: This is where the actual business logic for creating a product will go
     // IRequestHandler<TRequest, TResponse> interface requires implementing Handle method
@@ -48,7 +48,7 @@ namespace Catalog.API.Products.CreateProduct
             // 2. Create product in database
             // 3. Return the new product's ID
             // 4. Handle any errors that might occur
-            return new  (Guid.NewGuid());
+             return new CreateProductResult(Guid.NewGuid());
         }
     }
 }
