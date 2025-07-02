@@ -1,6 +1,7 @@
 ﻿// Import the MediatR library which provides the mediator pattern implementation
 using BuildingBlocks.CQRS;
 using Catalog.API.Models;
+using Marten;
 using MediatR;
 using System.Windows.Input;
 
@@ -25,7 +26,7 @@ namespace Catalog.API.Products.CreateProduct
     // IRequestHandler<TRequest, TResponse> interface requires implementing Handle method
     // TRequest = CreateProductCommand (input)
     // TResponse = CreateProductResult (output)
-    internal class CreateProductCommandHandler 
+    internal class CreateProductCommandHandler(IDocumentSession session)
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         // Handle Method: This is where you implement the actual product creation logic
@@ -43,12 +44,12 @@ namespace Catalog.API.Products.CreateProduct
                 ImageFile = command.ImageFile,
                 Price = command.Price,
             };
-            // Currently not implemented - this is where you would:
-            // 1. Validate the input
-            // 2. Create product in database
-            // 3. Return the new product's ID
-            // 4. Handle any errors that might occur
-             return new CreateProductResult(Guid.NewGuid());
+
+            session.Store(product);
+            await session.SaveChangesAsync(cancellationToken);
+
+            //return result
+            return new CreateProductResult(product.Id);
         }
     }
 }
