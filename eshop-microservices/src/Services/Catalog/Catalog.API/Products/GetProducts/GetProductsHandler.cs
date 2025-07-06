@@ -1,8 +1,3 @@
-using BuildingBlocks.CQRS;
-using Catalog.API.Models;
-using Marten.Linq.QueryHandlers;
-using Microsoft.Extensions.Logging.Configuration;
-
 namespace Catalog.API.Products.GetProducts;
 
 public record GetProductsQuery : IQuery<GetProductsResult>;

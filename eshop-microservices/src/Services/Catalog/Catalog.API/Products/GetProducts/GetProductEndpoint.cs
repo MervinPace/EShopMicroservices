@@ -1,5 +1,4 @@
-﻿
-namespace Catalog.API.Products.GetProducts
+﻿namespace Catalog.API.Products.GetProducts
 {
     public record GetProductsResponse(IEnumerable<Product> Products);
     public class GetProductEndpoint : ICarterModule
