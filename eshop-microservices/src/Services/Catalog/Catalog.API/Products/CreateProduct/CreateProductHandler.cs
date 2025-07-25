@@ -22,11 +22,22 @@ namespace Catalog.API.Products.CreateProduct
     // In this case, we only return the newly created product's unique identifier
     public record CreateProductResult(Guid Id);
 
+    public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
+    {
+        public CreateProductCommandValidator()
+        {
+                RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
+                RuleFor(x => x.Category).NotEmpty().WithMessage("Category is required");
+                RuleFor(x => x.ImageFile).NotEmpty().WithMessage("ImageFile is required");
+                RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price must be greater than zero");
+        }
+    }
+
     // Command Handler: This is where the actual business logic for creating a product will go
     // IRequestHandler<TRequest, TResponse> interface requires implementing Handle method
     // TRequest = CreateProductCommand (input)
     // TResponse = CreateProductResult (output)
-    internal class CreateProductCommandHandler(IDocumentSession session)
+    internal class CreateProductCommandHandler(IDocumentSession session, IValidator<CreateProductCommand> validator)
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         // Handle Method: This is where you implement the actual product creation logic
@@ -36,6 +47,14 @@ namespace Catalog.API.Products.CreateProduct
         // Returns: Task containing the CreateProductResult (the new product's ID)
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
+            //This is now configured to use IPipeline behaviour from buildingbllocks library
+            //// var result = await validator.ValidateAsync(command, cancellationToken);
+            // var errors = result.Errors.Select(x=>x.ErrorMessage).ToList();
+            //
+            // if (errors.Any())
+            // {
+            //     throw new ValidationException(errors.FirstOrDefault());
+            // }
             var product = new Product
             {
                 Name = command.Name,
